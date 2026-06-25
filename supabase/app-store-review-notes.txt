@@ -1,0 +1,33 @@
+Copy the sections below into App Store Connect → your app → version → App Review Information.
+
+---
+Sign-in required: Yes
+
+User name:
+fbcvrtickets.review@gmail.com
+
+Password:
+ForTestingPurposesOnly
+
+Notes:
+SIGN-IN (required)
+This app uses "Sign in with Google" — there is no in-app username/password form.
+
+Steps for the reviewer:
+1. Open the app
+2. Tap "Sign in with Google"
+3. Choose or enter: fbcvrtickets.review@gmail.com
+4. Password: ForTestingPurposesOnly
+5. Allow notifications when prompted (optional)
+
+This review account can create and view support tickets as a standard user (non-admin).
+
+Production users sign in with @fbcvr.com Google accounts. The review account above has been added to the server allowlist for App Review only.
+
+Privacy Policy URL: https://fbcvr.support/privacy
+Support URL: https://fbcvr.support
+
+This app is intended for unlisted App Store distribution (link-only, not public search) for FBCVR staff support ticketing.
+
+Photo library access is used only when attaching images or videos to tickets.
+---

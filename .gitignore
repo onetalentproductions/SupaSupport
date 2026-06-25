@@ -1,0 +1,17 @@
+# Xcode user-specific
+**/xcuserdata/
+*.xcuserstate
+
+# macOS
+.DS_Store
+
+# Web
+web/node_modules/
+web/dist/
+web/.env
+web/.env.local
+web/tsconfig.tsbuildinfo
+
+# Secrets (keep keys in AppConfig / env vars, not committed files)
+.env
+.env.local

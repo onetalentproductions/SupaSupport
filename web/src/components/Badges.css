@@ -1,0 +1,25 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+}
+
+.priority-low { background: #16a34a; }
+.priority-medium { background: #2563eb; }
+.priority-high { background: #ea580c; }
+.priority-urgent { background: #dc2626; }
+
+.status-open { background: #0891b2; }
+.status-complete { background: #64748b; }
+.status-out_of_scope { background: #7c3aed; }
+
+.department-media { background: #7c3aed; }
+.department-facilities { background: #ea580c; }
+
+.card .muted {
+  color: #64748b;
+}
