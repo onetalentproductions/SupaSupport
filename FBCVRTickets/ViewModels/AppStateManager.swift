@@ -73,6 +73,7 @@ class AppStateManager {
     func disconnectOrganization() async {
         await signOutFully()
         TenantManager.shared.disconnect()
+        BrandIconService.resetToDefaultIcon()
         isConnected = false
         orgName = AppConfig.appName
         departments = []
@@ -84,7 +85,9 @@ class AppStateManager {
         errorMessage = nil
         do {
             departments = try await OrgService.fetchDepartments()
-            orgName = (try? await OrgService.fetchOrgName()) ?? TenantManager.shared.config?.orgName ?? AppConfig.appName
+            let settings = try await OrgService.fetchOrgSettings()
+            orgName = settings.org_name
+            BrandIconService.applyAlternateIcon(key: settings.icon_key)
             let membership = try await OrgService.redeemInviteIfNeeded()
             guard membership.role != nil else {
                 throw OrgServiceError.notAMember

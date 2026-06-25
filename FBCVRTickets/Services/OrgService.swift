@@ -10,6 +10,12 @@ struct Department: Codable, Identifiable, Hashable {
     var id: String { slug }
 }
 
+struct OrgSettings: Codable {
+    let org_name: String
+    let icon_key: String?
+    let logo_url: String?
+}
+
 struct OrgMembership: Codable {
     let role: String?
     let department_slugs: [String]
@@ -38,10 +44,23 @@ enum OrgService {
             .value
     }
 
+    static func fetchOrgSettings() async throws -> OrgSettings {
+        let rows: [OrgSettings] = try await db
+            .from("org_settings")
+            .select("org_name, icon_key, logo_url")
+            .limit(1)
+            .execute()
+            .value
+        if let row = rows.first { return row }
+        return OrgSettings(
+            org_name: TenantManager.shared.config?.orgName ?? "Organization",
+            icon_key: nil,
+            logo_url: nil
+        )
+    }
+
     static func fetchOrgName() async throws -> String {
-        struct Row: Decodable { let org_name: String }
-        let rows: [Row] = try await db.from("org_settings").select("org_name").limit(1).execute().value
-        return rows.first?.org_name ?? TenantManager.shared.config?.orgName ?? "Organization"
+        try await fetchOrgSettings().org_name
     }
 
     static func fetchMembership() async throws -> OrgMembership {

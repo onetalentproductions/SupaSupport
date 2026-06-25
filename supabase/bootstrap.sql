@@ -9,6 +9,8 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE TABLE IF NOT EXISTS org_settings (
     id              INT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
     org_name        TEXT NOT NULL DEFAULT 'My Organization',
+    icon_key        TEXT,
+    logo_url        TEXT,
     access_mode     TEXT NOT NULL DEFAULT 'invite_only'
                     CHECK (access_mode IN ('invite_only', 'domain', 'open')),
     allowed_domain  TEXT,
