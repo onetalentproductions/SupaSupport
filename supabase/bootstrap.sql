@@ -127,6 +127,11 @@ CREATE INDEX IF NOT EXISTS idx_push_device_tokens_user_id ON push_device_tokens(
 -- ---------------------------------------------------------------------------
 -- Helpers
 -- ---------------------------------------------------------------------------
+-- Legacy FBCVR returned (media_count, facilities_count). SupaSupport uses
+-- dynamic departments (slug, label, completed_count). DROP required because
+-- PostgreSQL cannot change a function's return type with CREATE OR REPLACE.
+DROP FUNCTION IF EXISTS get_department_completion_counts();
+
 CREATE OR REPLACE FUNCTION member_role()
 RETURNS TEXT
 LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public
@@ -397,6 +402,15 @@ CREATE TRIGGER tickets_updated_at
 -- ---------------------------------------------------------------------------
 -- RLS
 -- ---------------------------------------------------------------------------
+-- Drop legacy FBCVR policy names (SupaSupport uses lowercase names below).
+DROP POLICY IF EXISTS "Users read own tickets" ON tickets;
+DROP POLICY IF EXISTS "Users create own tickets" ON tickets;
+DROP POLICY IF EXISTS "Admins update tickets" ON tickets;
+DROP POLICY IF EXISTS "Read ticket messages" ON ticket_messages;
+DROP POLICY IF EXISTS "Insert ticket messages" ON ticket_messages;
+DROP POLICY IF EXISTS "Read attachments" ON ticket_attachments;
+DROP POLICY IF EXISTS "Insert attachments" ON ticket_attachments;
+
 ALTER TABLE org_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE departments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE org_members ENABLE ROW LEVEL SECURITY;
@@ -481,6 +495,14 @@ CREATE POLICY "insert attachments" ON ticket_attachments FOR INSERT WITH CHECK (
 DROP POLICY IF EXISTS "Users manage own push tokens" ON push_device_tokens;
 CREATE POLICY "Users manage own push tokens" ON push_device_tokens
     FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+-- RPC grants (required for Supabase client .rpc() calls)
+GRANT EXECUTE ON FUNCTION get_department_completion_counts() TO authenticated;
+GRANT EXECUTE ON FUNCTION get_my_membership() TO authenticated;
+GRANT EXECUTE ON FUNCTION redeem_invite(TEXT) TO authenticated;
+GRANT EXECUTE ON FUNCTION create_invite(TEXT, TEXT[], TEXT, INT) TO authenticated;
+GRANT EXECUTE ON FUNCTION add_pending_member(TEXT, TEXT, TEXT[]) TO authenticated;
+GRANT EXECUTE ON FUNCTION claim_pending_membership() TO authenticated;
 
 -- Storage bucket: create "ticket-media" in Supabase Dashboard → Storage (public read if needed)
 

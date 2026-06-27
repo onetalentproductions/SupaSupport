@@ -12,14 +12,11 @@ struct ContentView: View {
                     .environment(stateManager)
 
                 Group {
-                    if !stateManager.isConnected {
-                        ConnectView()
-                            .environment(stateManager)
-                    } else if stateManager.isLoggedIn {
+                    if stateManager.isLoggedIn {
                         MainTabView()
                             .environment(stateManager)
                     } else {
-                        LoginLayoutView()
+                        ConnectView()
                             .environment(stateManager)
                     }
                 }

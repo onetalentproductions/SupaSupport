@@ -20,7 +20,7 @@ enum AppChrome {
 
 struct AppStartup: View {
     var body: some View {
-        LinearGradient(colors: [.cyan, .blue], startPoint: .top, endPoint: .bottom)
+        AppTheme.startupGradient
             .ignoresSafeArea()
     }
 }
@@ -82,9 +82,9 @@ extension View {
                 Color(.systemBackground)
                 LinearGradient(
                     colors: [
-                        Color.cyan.opacity(0.07),
+                        AppTheme.accent.opacity(0.08),
                         Color.clear,
-                        Color.blue.opacity(0.05)
+                        AppTheme.accentDark.opacity(0.06)
                     ],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
@@ -193,11 +193,7 @@ struct TopActionBar: View {
         .frame(height: actionBarHeight + bumpOverlap)
         .frame(maxWidth: .infinity)
         .background(
-            LinearGradient(
-                colors: [.cyan.opacity(0.9), .blue.opacity(0.9)],
-                startPoint: .leading,
-                endPoint: .trailing
-            )
+            AppTheme.actionBarGradient
         )
     }
 
@@ -240,7 +236,7 @@ struct PriorityBadge: View {
     private var fillColor: Color {
         switch priority {
         case .low: Color(red: 0.12, green: 0.62, blue: 0.38)
-        case .medium: Color(red: 0.12, green: 0.42, blue: 0.82)
+        case .medium: AppTheme.accent
         case .high: Color(red: 0.82, green: 0.42, blue: 0.08)
         case .urgent: Color(red: 0.78, green: 0.15, blue: 0.18)
         }

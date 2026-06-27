@@ -1,6 +1,6 @@
 export type TicketPriority = 'low' | 'medium' | 'high' | 'urgent'
 export type TicketStatus = 'open' | 'complete' | 'out_of_scope'
-export type TicketDepartment = 'media' | 'facilities'
+export type TicketDepartment = string
 export type AttachmentType = 'image' | 'video'
 
 export interface Ticket {
@@ -50,9 +50,13 @@ export const STATUS_LABELS: Record<TicketStatus, string> = {
   out_of_scope: 'Out of Scope',
 }
 
-export const DEPARTMENT_LABELS: Record<TicketDepartment, string> = {
+export const DEPARTMENT_LABELS: Record<string, string> = {
   media: 'Media',
   facilities: 'Facilities',
+}
+
+export function departmentLabel(slug: string): string {
+  return DEPARTMENT_LABELS[slug] ?? slug.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 export function isOpenStatus(status: TicketStatus) {

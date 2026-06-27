@@ -94,7 +94,6 @@ enum ConnectPayloadParser {
     }
 }
 
-@MainActor
 final class TenantManager {
     static let shared = TenantManager()
 

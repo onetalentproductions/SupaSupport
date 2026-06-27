@@ -1,7 +1,11 @@
 import type { User } from '@supabase/supabase-js'
-import { appConfig } from './config'
 
-export { appConfig }
+export const appConfig = {
+  appName: 'SupaSupport',
+  siteUrl: 'https://supasupport.net',
+  tagline: 'Helpdesk tickets on your own Supabase — private to your team.',
+  supportEmail: 'support@supasupport.net',
+} as const
 
 export function validateConfig(): string | null {
   return null
@@ -19,13 +23,4 @@ export function userDisplayEmail(user: User): string {
     if (candidate?.trim()) return candidate.toLowerCase().trim()
   }
   return `${user.id}@user.local`
-}
-
-// Web admin detection will use org_members RPC in a follow-up pass.
-export function isAdminEmail(_email: string | null | undefined): boolean {
-  return false
-}
-
-export function adminDepartmentForEmail(_email: string | null | undefined): string | null {
-  return null
 }

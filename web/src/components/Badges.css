@@ -9,11 +9,11 @@
 }
 
 .priority-low { background: #16a34a; }
-.priority-medium { background: #2563eb; }
+.priority-medium { background: #1f8547; }
 .priority-high { background: #ea580c; }
 .priority-urgent { background: #dc2626; }
 
-.status-open { background: #0891b2; }
+.status-open { background: #1f8547; }
 .status-complete { background: #64748b; }
 .status-out_of_scope { background: #7c3aed; }
 

@@ -169,7 +169,7 @@ struct TicketDetailView: View {
                     }
                 }
                 if currentTicket.status != .open {
-                    adminButton("Reopen", icon: "arrow.uturn.backward.circle", color: .blue) {
+                    adminButton("Reopen", icon: "arrow.uturn.backward.circle", color: AppTheme.accent) {
                         updateStatus(.open)
                     }
                 }
@@ -450,7 +450,7 @@ struct ThreadPostView: View {
     }
 
     private var accentColor: Color {
-        message.is_admin ? .orange : .blue
+        message.is_admin ? .orange : AppTheme.accent
     }
 
     var body: some View {
@@ -475,7 +475,7 @@ struct ThreadPostView: View {
                             roleBadge("Admin", color: Color(red: 0.82, green: 0.42, blue: 0.08))
                         }
                         if isOriginalPost {
-                            roleBadge("Original", color: Color(red: 0.12, green: 0.42, blue: 0.82))
+                            roleBadge("Original", color: AppTheme.accent)
                         }
 
                         Spacer()

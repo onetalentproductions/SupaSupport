@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { ErrorBoundary } from './components/ErrorBoundary'
+import { LandingPage } from './pages/LandingPage'
 import { ConnectPage } from './pages/ConnectPage'
 import { SetupPage } from './pages/SetupPage'
 import { LoginPage } from './pages/LoginPage'
@@ -26,7 +27,7 @@ export default function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Navigate to="/connect" replace />} />
+            <Route path="/" element={<LandingPage />} />
             <Route path="/connect" element={<ConnectPage />} />
             <Route path="/setup" element={<SetupPage />} />
             <Route path="/login" element={<RequireTenant><LoginPage /></RequireTenant>} />
@@ -39,7 +40,7 @@ export default function App() {
               <Route path="/tickets/new" element={<CreateTicketPage />} />
               <Route path="/tickets/:id" element={<TicketDetailPage />} />
             </Route>
-            <Route path="*" element={<Navigate to="/connect" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

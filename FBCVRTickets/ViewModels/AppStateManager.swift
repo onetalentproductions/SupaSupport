@@ -5,9 +5,9 @@ import UIKit
 
 @Observable
 class AppStateManager {
-    var isConnected = TenantManager.shared.isConnected
+    var isConnected = false
     var isLoggedIn = false
-    var orgName = TenantManager.shared.config?.orgName ?? AppConfig.appName
+    var orgName = AppConfig.appName
     var departments: [Department] = []
     var userTickets: [Ticket] = []
     var archivedTickets: [Ticket] = []
@@ -29,6 +29,7 @@ class AppStateManager {
 
     init() {
         isConnected = TenantManager.shared.isConnected
+        orgName = TenantManager.shared.config?.orgName ?? AppConfig.appName
         guard TenantManager.shared.isConnected else { return }
         Task {
             let session = try? await TenantManager.shared.supabase.auth.session

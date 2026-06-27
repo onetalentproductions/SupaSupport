@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { handleAuthCallback } from '../lib/auth'
+import { ensureMembershipAfterSignIn } from '../lib/org'
 import { useAuth } from '../context/AuthContext'
 import { PublicShell } from '../components/Layout'
 
@@ -12,6 +13,7 @@ export function AuthCallbackPage() {
   useEffect(() => {
     handleAuthCallback()
       .then(async () => {
+        await ensureMembershipAfterSignIn()
         await refresh()
         navigate('/tickets', { replace: true })
       })

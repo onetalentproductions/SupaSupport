@@ -8,7 +8,7 @@ struct AdminAnalyticsView: View {
 
     private let levelColors: [String: Color] = [
         "Low": .green,
-        "Medium": .blue,
+        "Medium": AppTheme.accent,
         "High": .orange,
         "Out of Scope": .purple
     ]
@@ -85,7 +85,7 @@ struct AdminAnalyticsView: View {
                     )
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.cyan, .blue],
+                            colors: [AppTheme.accentLight, AppTheme.accentDark],
                             startPoint: .top,
                             endPoint: .bottom
                         )
@@ -120,7 +120,7 @@ struct AdminAnalyticsView: View {
                             .font(.caption.bold())
                             .foregroundStyle(.white)
                             .frame(width: 22, height: 22)
-                            .background(Circle().fill(Color.blue.opacity(0.8)))
+                            .background(Circle().fill(AppTheme.accent.opacity(0.85)))
 
                         VStack(alignment: .leading, spacing: 2) {
                             Text(displayName(for: submitter.email))

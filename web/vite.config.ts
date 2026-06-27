@@ -15,4 +15,7 @@ function spaFallback() {
 
 export default defineConfig({
   plugins: [react(), spaFallback()],
+  server: {
+    fs: { allow: ['..'] },
+  },
 })

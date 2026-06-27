@@ -40,7 +40,10 @@ export function ConnectPage() {
         </button>
         {error && <p className="error-text">{error}</p>}
         <p className="fine-print">
-          <Link to="/setup">Set up a new organization →</Link>
+          Setting up a new organization? <Link to="/setup">Create server →</Link>
+        </p>
+        <p className="fine-print">
+          <Link to="/">← Back to home</Link>
         </p>
       </div>
     </PublicShell>

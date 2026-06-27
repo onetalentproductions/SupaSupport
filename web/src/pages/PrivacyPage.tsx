@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { config } from '../lib/config'
+import { appConfig } from '../lib/config'
 import { PublicShell } from '../components/Layout'
 
 export function PrivacyPage() {
@@ -9,21 +9,21 @@ export function PrivacyPage() {
     <PublicShell>
       <article className="legal-page card">
         <p className="back-row">
-          <Link to="/login">← Back</Link>
+          <Link to="/">← Back</Link>
         </p>
         <h1>Privacy Policy</h1>
         <p className="muted">Last updated: {updated}</p>
 
         <p>
-          This Privacy Policy describes how <strong>{config.siteName}</strong> (“we”, “us”) collects,
+          This Privacy Policy describes how <strong>{appConfig.appName}</strong> (“we”, “us”) collects,
           uses, and protects information when you use our mobile app and website at{' '}
-          <a href={config.siteUrl}>{config.siteUrl}</a>.
+          <a href={appConfig.siteUrl}>{appConfig.siteUrl}</a>.
         </p>
 
         <h2>Who this applies to</h2>
         <p>
-          FBCVR Tickets is an internal support tool for authorized FBCVR staff and designated test
-          accounts. Access requires an approved Google account.
+          {appConfig.appName} is a support ticketing tool for authorized organization members.
+          Access requires sign-in through your organization's configured provider.
         </p>
 
         <h2>Information we collect</h2>
@@ -66,7 +66,7 @@ export function PrivacyPage() {
         <h2>Who can see your data</h2>
         <ul>
           <li>You can view your own tickets and replies.</li>
-          <li>Authorized FBCVR administrators can view tickets to provide support.</li>
+          <li>Authorized organization administrators can view tickets to provide support.</li>
           <li>Our infrastructure providers process data on our behalf to operate the service.</li>
         </ul>
 
@@ -98,7 +98,7 @@ export function PrivacyPage() {
         <h2>Contact</h2>
         <p>
           Questions about this policy:{' '}
-          <a href={`mailto:${config.supportEmail}`}>{config.supportEmail}</a>
+          <a href={`mailto:${appConfig.supportEmail}`}>{appConfig.supportEmail}</a>
         </p>
       </article>
     </PublicShell>

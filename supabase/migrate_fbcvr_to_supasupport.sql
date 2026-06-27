@@ -1,5 +1,5 @@
 -- Migrate an existing FBCVR Supabase project toward SupaSupport schema.
--- Run AFTER reviewing bootstrap.sql — this adds org tables alongside existing tickets.
+-- Run bootstrap.sql after this file (bootstrap now drops legacy functions/policies).
 
 CREATE TABLE IF NOT EXISTS org_settings (
     id              INT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
@@ -56,8 +56,8 @@ CREATE TABLE IF NOT EXISTS invites (
     created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Copy functions/RPC from bootstrap.sql (get_my_membership, redeem_invite, create_invite, etc.)
--- Easiest path: run full bootstrap.sql on a fresh project OR paste function block from bootstrap.sql here.
+-- Legacy analytics RPC (see bootstrap.sql for replacement)
+DROP FUNCTION IF EXISTS get_department_completion_counts();
 
 INSERT INTO org_members (user_id, email, role, department_slugs)
 SELECT u.id, u.email, 'admin', ARRAY['media','facilities']
@@ -76,3 +76,9 @@ SELECT DISTINCT t.user_id, t.user_email, 'user', ARRAY['facilities']
 FROM tickets t
 WHERE NOT EXISTS (SELECT 1 FROM org_members m WHERE m.user_id = t.user_id)
 ON CONFLICT (user_id) DO NOTHING;
+
+ALTER TABLE org_settings ADD COLUMN IF NOT EXISTS icon_key TEXT;
+ALTER TABLE org_settings ADD COLUMN IF NOT EXISTS logo_url TEXT;
+UPDATE org_settings SET org_name = 'FBCVR', icon_key = 'fbcvr' WHERE id = 1;
+
+-- Next step: run supabase/bootstrap.sql in the SQL Editor (creates RPC + RLS).

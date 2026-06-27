@@ -27,7 +27,7 @@ struct MainTabView: View {
                     Label("Analytics", systemImage: "chart.bar")
                 }
             }
-            .tint(.white)
+            .tint(AppTheme.accent)
             .onAppear { AdminTabBarStyle.apply() }
         } else {
             NavigationStack {

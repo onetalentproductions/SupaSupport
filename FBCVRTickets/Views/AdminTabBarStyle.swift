@@ -11,8 +11,8 @@ enum AdminTabBarStyle {
         normal.titleTextAttributes = [.foregroundColor: UIColor(white: 0.35, alpha: 1)]
 
         let selected = appearance.stackedLayoutAppearance.selected
-        selected.iconColor = .white
-        selected.titleTextAttributes = [.foregroundColor: UIColor.white]
+        selected.iconColor = AppTheme.accentUIColor
+        selected.titleTextAttributes = [.foregroundColor: AppTheme.accentUIColor]
 
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance

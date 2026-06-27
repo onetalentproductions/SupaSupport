@@ -1,23 +1,26 @@
 import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { DEPARTMENT_LABELS } from '../types'
+import { loadTenant } from '../lib/tenant'
+import { appConfig } from '../lib/config'
 import './Layout.css'
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { email, isAdmin, adminDepartment, signOut } = useAuth()
+  const tenant = loadTenant()
 
   return (
     <div className="app-shell">
       <header className="app-header">
         <div className="header-inner">
           <Link to="/tickets" className="brand">
-            <span className="brand-mark">F</span>
-            <span>FBCVR Tickets</span>
+            <span className="brand-mark">S</span>
+            <span>{tenant?.orgName ?? appConfig.appName}</span>
           </Link>
           <div className="header-actions">
             {isAdmin && adminDepartment && (
-              <span className="admin-pill">{DEPARTMENT_LABELS[adminDepartment]} Admin</span>
+              <span className="admin-pill">{adminDepartment} admin</span>
             )}
+            {isAdmin && !adminDepartment && <span className="admin-pill">Admin</span>}
             <Link to="/tickets/new" className="btn btn-header">
               New Ticket
             </Link>
@@ -44,7 +47,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main className="app-main">{children}</main>
       <footer className="app-footer">
         <Link to="/privacy">Privacy Policy</Link>
-        <span>© {new Date().getFullYear()} FBCVR</span>
+        <span>© {new Date().getFullYear()} {appConfig.appName}</span>
       </footer>
     </div>
   )
@@ -55,6 +58,7 @@ export function PublicShell({ children }: { children: React.ReactNode }) {
     <div className="app-shell public-shell">
       <main className="app-main public-main">{children}</main>
       <footer className="app-footer">
+        <Link to="/">Home</Link>
         <Link to="/privacy">Privacy Policy</Link>
       </footer>
     </div>
