@@ -7,6 +7,7 @@ import { buildFullBootstrapSql, type SetupWizardInput } from '../lib/setupSql'
 import { PublicShell } from '../components/Layout'
 import { CopyButton } from '../components/CopyButton'
 import { QrImage } from '../components/QrImage'
+import { fetchOAuthConfig, type OAuthConfigResponse } from '../lib/oauthConfig'
 
 const STEPS = [
   'Organization',
@@ -31,6 +32,9 @@ export function SetupPage() {
 
   const [supabaseUrl, setSupabaseUrl] = useState('')
   const [anonKey, setAnonKey] = useState('')
+  const [oauthConfig, setOauthConfig] = useState<OAuthConfigResponse | null>(null)
+  const [oauthError, setOauthError] = useState<string | null>(null)
+  const [oauthLoading, setOauthLoading] = useState(false)
 
   const departmentLines = useMemo(
     () =>
@@ -79,10 +83,6 @@ export function SetupPage() {
     return `supasupport://connect?${params.toString()}`
   }, [wizardInput, supabaseUrl, anonKey])
 
-  const authCallbackUrl = supabaseUrl.trim()
-    ? `${supabaseUrl.replace(/\/$/, '')}/auth/v1/callback`
-    : 'https://YOUR_PROJECT.supabase.co/auth/v1/callback'
-
   const step1Valid = Boolean(wizardInput)
   const step2Valid = supabaseUrl.trim().startsWith('https://') && supabaseUrl.includes('supabase.co')
 
@@ -104,6 +104,20 @@ export function SetupPage() {
     })
     resetSupabaseClient()
     navigate('/login')
+  }
+
+  async function loadOAuthCredentials() {
+    setOauthError(null)
+    setOauthLoading(true)
+    setOauthConfig(null)
+    try {
+      const config = await fetchOAuthConfig(supabaseUrl)
+      setOauthConfig(config)
+    } catch (err) {
+      setOauthError(err instanceof Error ? err.message : 'Could not load credentials')
+    } finally {
+      setOauthLoading(false)
+    }
   }
 
   return (
@@ -321,23 +335,67 @@ export function SetupPage() {
               </div>
 
               <div className="info-callout info-callout-muted">
-                <h3>iOS app (Google / Apple)</h3>
-                <p style={{ margin: '0 0 0.5rem' }}>
-                  The SupaSupport mobile app uses sign-in providers managed by us — your team does not
-                  create a Google Cloud project for tickets.
+                <h3>SupaSupport mobile app (Google / Apple)</h3>
+                <p style={{ margin: '0 0 0.75rem' }}>
+                  Your team does <strong>not</strong> create a Google Cloud or Apple Developer account.
+                  SupaSupport provides shared sign-in credentials — paste them into Supabase in one step.
                 </p>
-                <p style={{ margin: 0 }}>
-                  To hook Google sign-in up to <strong>your</strong> Supabase project, email{' '}
-                  <a href={`mailto:${appConfig.supportEmail}`}>{appConfig.supportEmail}</a> with your
-                  project URL (<code>{supabaseUrl || '…'}</code>). We register{' '}
-                  <code>{authCallbackUrl}</code> in our developer console and send you the two values to
-                  paste into Supabase → Auth → Google.
-                </p>
-                <p className="fine-print" style={{ marginTop: '0.75rem', marginBottom: 0 }}>
-                  We do not publish OAuth secrets on this site. Sharing a client secret publicly would
-                  let someone abuse sign-in flows (not your database — that is protected by Supabase
-                  keys and row-level security).
-                </p>
+
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  disabled={!step2Valid || oauthLoading}
+                  onClick={loadOAuthCredentials}
+                >
+                  {oauthLoading ? 'Loading…' : 'Get sign-in credentials'}
+                </button>
+
+                {oauthError && <p className="error-text">{oauthError}</p>}
+
+                {oauthConfig && (
+                  <div style={{ marginTop: '1rem' }}>
+                    <p className="fine-print">{oauthConfig.notes.ios}</p>
+                    <p className="fine-print">{oauthConfig.notes.web}</p>
+
+                    <h4 style={{ marginBottom: '0.35rem' }}>Supabase → Authentication → Google</h4>
+                    <ol className="instruction-list">
+                      <li>Enable Google.</li>
+                      <li>
+                        Client ID: <code>{oauthConfig.google.clientId}</code>{' '}
+                        <CopyButton text={oauthConfig.google.clientId} label="Copy ID" />
+                      </li>
+                      <li>
+                        Client Secret: <CopyButton text={oauthConfig.google.clientSecret} label="Copy secret" />
+                      </li>
+                      <li>Save.</li>
+                    </ol>
+
+                    {oauthConfig.apple && (
+                      <>
+                        <h4 style={{ marginBottom: '0.35rem' }}>Supabase → Authentication → Apple</h4>
+                        <ol className="instruction-list">
+                          <li>Enable Apple.</li>
+                          <li>
+                            Services ID: <code>{oauthConfig.apple.servicesId}</code>{' '}
+                            <CopyButton text={oauthConfig.apple.servicesId ?? ''} label="Copy" />
+                          </li>
+                          <li>
+                            Team ID: <code>{oauthConfig.apple.teamId}</code>{' '}
+                            <CopyButton text={oauthConfig.apple.teamId ?? ''} label="Copy" />
+                          </li>
+                          <li>
+                            Key ID: <code>{oauthConfig.apple.keyId}</code>{' '}
+                            <CopyButton text={oauthConfig.apple.keyId ?? ''} label="Copy" />
+                          </li>
+                          <li>
+                            Private key (.p8 contents):{' '}
+                            <CopyButton text={oauthConfig.apple.privateKey ?? ''} label="Copy key" />
+                          </li>
+                        </ol>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="wizard-nav">
