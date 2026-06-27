@@ -5,6 +5,8 @@ export const appConfig = {
   siteUrl: 'https://supasupport.net',
   tagline: 'Helpdesk tickets on your own Supabase — private to your team.',
   supportEmail: 'support@supasupport.net',
+  /** Public Google OAuth client ID — safe to show; secret is provisioned per org by support. */
+  sharedGoogleClientId: import.meta.env.VITE_SHARED_GOOGLE_CLIENT_ID ?? '',
 } as const
 
 export function validateConfig(): string | null {

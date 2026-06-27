@@ -9,7 +9,7 @@ import {
 } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { getSupabase } from '../lib/supabase'
-import { getSessionUser, signInWithGoogle, signOut } from '../lib/auth'
+import { getSessionUser, signInWithGoogle, signInWithMagicLink, signOut } from '../lib/auth'
 import {
   fetchMembership,
   isOrgAdmin,
@@ -26,6 +26,7 @@ interface AuthState {
   adminDepartment: string | null
   loading: boolean
   signIn: () => Promise<void>
+  signInWithEmail: (email: string) => Promise<void>
   signOut: () => Promise<void>
   refresh: () => Promise<void>
 }
@@ -82,6 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       adminDepartment: primaryAdminDepartment(membership),
       loading,
       signIn: signInWithGoogle,
+      signInWithEmail: signInWithMagicLink,
       signOut,
       refresh,
     }),

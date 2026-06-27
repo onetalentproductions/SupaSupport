@@ -13,7 +13,7 @@ const STEPS = [
   'Create Supabase',
   'Run SQL',
   'Storage',
-  'Auth',
+  'Sign-in',
   'Connect app',
 ] as const
 
@@ -79,7 +79,12 @@ export function SetupPage() {
     return `supasupport://connect?${params.toString()}`
   }, [wizardInput, supabaseUrl, anonKey])
 
+  const authCallbackUrl = supabaseUrl.trim()
+    ? `${supabaseUrl.replace(/\/$/, '')}/auth/v1/callback`
+    : 'https://YOUR_PROJECT.supabase.co/auth/v1/callback'
+
   const step1Valid = Boolean(wizardInput)
+  const step2Valid = supabaseUrl.trim().startsWith('https://') && supabaseUrl.includes('supabase.co')
 
   function goNext() {
     setStep((s) => Math.min(s + 1, STEPS.length - 1))
@@ -198,16 +203,27 @@ export function SetupPage() {
                 </li>
                 <li>Wait until the project finishes provisioning (1–2 minutes).</li>
                 <li>
-                  Open <strong>Project Settings → API</strong> and keep that tab open — you will need the
-                  Project URL and anon public key in step 6.
+                  Open <strong>Project Settings → API</strong> and copy your <strong>Project URL</strong>{' '}
+                  below.
                 </li>
               </ol>
+
+              <label className="field">
+                <span>Supabase Project URL</span>
+                <input
+                  value={supabaseUrl}
+                  onChange={(e) => setSupabaseUrl(e.target.value)}
+                  placeholder="https://xxxxx.supabase.co"
+                />
+                <span className="field-hint">You will need the anon key on the last step.</span>
+              </label>
+
               <div className="wizard-nav">
-                <button type="button" className="btn btn-ghost" onClick={goBack}>
+                <button type="button" className="btn-back" onClick={goBack}>
                   ← Back
                 </button>
-                <button type="button" className="btn btn-primary" onClick={goNext}>
-                  I have a project →
+                <button type="button" className="btn btn-primary" disabled={!step2Valid} onClick={goNext}>
+                  Next →
                 </button>
               </div>
             </>
@@ -235,7 +251,7 @@ export function SetupPage() {
                 Only paste the <strong>anon / publishable</strong> key later — never the service role key.
               </p>
               <div className="wizard-nav">
-                <button type="button" className="btn btn-ghost" onClick={goBack}>
+                <button type="button" className="btn-back" onClick={goBack}>
                   ← Back
                 </button>
                 <button type="button" className="btn btn-primary" onClick={goNext}>
@@ -262,7 +278,7 @@ export function SetupPage() {
                 </li>
               </ol>
               <div className="wizard-nav">
-                <button type="button" className="btn btn-ghost" onClick={goBack}>
+                <button type="button" className="btn-back" onClick={goBack}>
                   ← Back
                 </button>
                 <button type="button" className="btn btn-primary" onClick={goNext}>
@@ -274,31 +290,62 @@ export function SetupPage() {
 
           {step === 4 && (
             <>
-              <h2>Enable sign-in providers</h2>
+              <h2>Enable sign-in</h2>
               <p className="muted">
-                In Supabase, open <strong>Authentication → Providers</strong> and enable at least one
-                provider your team will use.
+                You do <strong>not</strong> need your own Google Cloud or Apple Developer account for
+                basic setup. Everything below happens inside Supabase.
               </p>
-              <ul className="instruction-list">
-                <li>
-                  <strong>Google</strong> — enable, add OAuth client ID/secret from Google Cloud Console.
-                  Add redirect URL:{' '}
-                  <code>{supabaseUrl ? `${supabaseUrl.replace(/\/$/, '')}/auth/v1/callback` : 'https://YOUR_PROJECT.supabase.co/auth/v1/callback'}</code>
-                </li>
-                <li>
-                  <strong>Apple</strong> — enable for the iOS app (configure Services ID + key in Apple
-                  Developer).
-                </li>
-              </ul>
-              <p className="fine-print">
-                Web sign-in uses Google OAuth with redirect back to this site after you connect.
-              </p>
+
+              <div className="info-callout">
+                <h3>Recommended: Email magic link</h3>
+                <ol className="instruction-list" style={{ marginBottom: 0 }}>
+                  <li>
+                    Supabase → <strong>Authentication → Providers → Email</strong> → enable Email.
+                  </li>
+                  <li>
+                    Supabase → <strong>Authentication → URL Configuration</strong>:
+                    <ul>
+                      <li>
+                        Site URL: <code>{appConfig.siteUrl}</code>
+                      </li>
+                      <li>
+                        Redirect URLs: add <code>{appConfig.siteUrl}/auth/callback</code>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    Sign in on the web with the admin email you entered in step 1 — SupaSupport sends a
+                    one-time link to your inbox.
+                  </li>
+                </ol>
+              </div>
+
+              <div className="info-callout info-callout-muted">
+                <h3>iOS app (Google / Apple)</h3>
+                <p style={{ margin: '0 0 0.5rem' }}>
+                  The SupaSupport mobile app uses sign-in providers managed by us — your team does not
+                  create a Google Cloud project for tickets.
+                </p>
+                <p style={{ margin: 0 }}>
+                  To hook Google sign-in up to <strong>your</strong> Supabase project, email{' '}
+                  <a href={`mailto:${appConfig.supportEmail}`}>{appConfig.supportEmail}</a> with your
+                  project URL (<code>{supabaseUrl || '…'}</code>). We register{' '}
+                  <code>{authCallbackUrl}</code> in our developer console and send you the two values to
+                  paste into Supabase → Auth → Google.
+                </p>
+                <p className="fine-print" style={{ marginTop: '0.75rem', marginBottom: 0 }}>
+                  We do not publish OAuth secrets on this site. Sharing a client secret publicly would
+                  let someone abuse sign-in flows (not your database — that is protected by Supabase
+                  keys and row-level security).
+                </p>
+              </div>
+
               <div className="wizard-nav">
-                <button type="button" className="btn btn-ghost" onClick={goBack}>
+                <button type="button" className="btn-back" onClick={goBack}>
                   ← Back
                 </button>
                 <button type="button" className="btn btn-primary" onClick={goNext}>
-                  Auth configured →
+                  Sign-in configured →
                 </button>
               </div>
             </>
@@ -308,17 +355,13 @@ export function SetupPage() {
             <>
               <h2>Connect the app</h2>
               <p className="muted">
-                From Supabase <strong>Project Settings → API</strong>, paste your project URL and anon
-                public key below.
+                From Supabase <strong>Project Settings → API</strong>, copy your{' '}
+                <strong>anon public key</strong> below. Your project URL is already saved.
               </p>
 
               <label className="field">
                 <span>Supabase Project URL</span>
-                <input
-                  value={supabaseUrl}
-                  onChange={(e) => setSupabaseUrl(e.target.value)}
-                  placeholder="https://xxxxx.supabase.co"
-                />
+                <input value={supabaseUrl} readOnly />
               </label>
 
               <label className="field">
@@ -365,7 +408,7 @@ export function SetupPage() {
               )}
 
               <div className="wizard-nav">
-                <button type="button" className="btn btn-ghost" onClick={goBack}>
+                <button type="button" className="btn-back" onClick={goBack}>
                   ← Back
                 </button>
               </div>

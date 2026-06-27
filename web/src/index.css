@@ -56,6 +56,20 @@ h1, h2, h3, p {
   color: rgba(255, 255, 255, 0.82);
 }
 
+.card .muted,
+.wizard-body .muted,
+.login-card .muted {
+  color: #64748b;
+}
+
+.card h1,
+.card h2,
+.wizard-body h1,
+.wizard-body h2,
+.login-card h1 {
+  color: #0f172a;
+}
+
 .card {
   background: rgba(255, 255, 255, 0.96);
   border-radius: 14px;
@@ -279,6 +293,31 @@ h1, h2, h3, p {
   background: var(--accent);
   color: white;
   font-weight: 800;
+}
+
+.login-card .field {
+  text-align: left;
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.login-card .field span {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.login-card .field input {
+  font: inherit;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+}
+
+.login-card .btn-ghost {
+  background: #f1f5f9;
+  color: #475569;
+  margin-top: 0.5rem;
 }
 
 .legal-page {

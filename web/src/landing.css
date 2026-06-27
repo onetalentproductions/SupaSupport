@@ -218,6 +218,47 @@
   border-top: 1px solid #e2e8f0;
 }
 
+.wizard-nav .btn-back {
+  background: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.wizard-nav .btn-back:hover {
+  background: #e2e8f0;
+}
+
+.info-callout {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  margin: 1rem 0;
+  color: #14532d;
+  line-height: 1.55;
+}
+
+.info-callout h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  color: #14532d;
+}
+
+.info-callout-muted {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #334155;
+}
+
+.info-callout-muted h3 {
+  color: #0f172a;
+}
+
 .connect-output {
   margin-top: 1.5rem;
   padding-top: 1.25rem;
