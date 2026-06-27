@@ -1,0 +1,9 @@
+{
+  "name": "supasupport",
+  "private": true,
+  "description": "SupaSupport monorepo — web app lives in web/",
+  "scripts": {
+    "build": "npm ci --prefix web && npm run build --prefix web",
+    "dev": "npm run dev --prefix web"
+  }
+}
