@@ -12,6 +12,9 @@ web/.env
 web/.env.local
 web/tsconfig.tsbuildinfo
 
+# Root (wrangler)
+node_modules/
+
 # Secrets (keep keys in AppConfig / env vars, not committed files)
 .env
 .env.local
