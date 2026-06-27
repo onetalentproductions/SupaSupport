@@ -4,6 +4,10 @@
   "description": "SupaSupport monorepo — web app lives in web/",
   "scripts": {
     "build": "npm ci --prefix web && npm run build --prefix web",
+    "deploy": "npm run build && wrangler deploy",
     "dev": "npm run dev --prefix web"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
   }
 }

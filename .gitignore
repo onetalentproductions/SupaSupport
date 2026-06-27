@@ -15,3 +15,6 @@ web/tsconfig.tsbuildinfo
 # Secrets (keep keys in AppConfig / env vars, not committed files)
 .env
 .env.local
+
+# Wrangler local state
+.wrangler/
